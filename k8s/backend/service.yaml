@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: game-backend
+  namespace: game-system
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: game-backend 

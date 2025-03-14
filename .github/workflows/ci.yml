@@ -1,0 +1,93 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'mainpage/**'
+      - 'backend/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'mainpage/**'
+      - 'backend/**'
+
+env:
+  AWS_REGION: us-east-2
+  ECR_REGISTRY: ${{ secrets.ECR_REPO }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        repository: qoalswns14/aws-cicd-gamecenter
+        token: ${{ secrets.GH_TOKEN }}
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Extract frontend version
+      id: frontend-version
+      run: |
+        cd mainpage
+        VERSION=$(grep 'LABEL version=' Dockerfile | cut -d'"' -f2)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Extract backend version
+      id: backend-version
+      run: |
+        cd backend
+        VERSION=$(grep 'LABEL version=' Dockerfile | cut -d'"' -f2)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Build and push Frontend image
+      env:
+        IMAGE_TAG: ${{ github.sha }}
+        VERSION: ${{ steps.frontend-version.outputs.version }}
+      run: |
+        cd mainpage
+        docker build -t $ECR_REGISTRY/game-website:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/game-website:$IMAGE_TAG
+        
+        docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:latest
+        docker push $ECR_REGISTRY/game-website:latest
+        
+        docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:v${VERSION}
+        docker push $ECR_REGISTRY/game-website:v${VERSION}
+
+    - name: Build and push Backend image
+      env:
+        IMAGE_TAG: ${{ github.sha }}
+        VERSION: ${{ steps.backend-version.outputs.version }}
+      run: |
+        cd backend
+        docker build -t $ECR_REGISTRY/game-backend:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/game-backend:$IMAGE_TAG
+        
+        docker tag $ECR_REGISTRY/game-backend:$IMAGE_TAG $ECR_REGISTRY/game-backend:latest
+        docker push $ECR_REGISTRY/game-backend:latest
+        
+        docker tag $ECR_REGISTRY/game-backend:$IMAGE_TAG $ECR_REGISTRY/game-backend:v${VERSION}
+        docker push $ECR_REGISTRY/game-backend:v${VERSION}
+
+    - name: Print Image URLs
+      run: |
+        echo "Frontend image pushed to: $ECR_REGISTRY/game-website:latest"
+        echo "Frontend image pushed to: $ECR_REGISTRY/game-website:v${{ steps.frontend-version.outputs.version }}"
+        echo "Backend image pushed to: $ECR_REGISTRY/game-backend:latest"
+        echo "Backend image pushed to: $ECR_REGISTRY/game-backend:v${{ steps.backend-version.outputs.version }}" 

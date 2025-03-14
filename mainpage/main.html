@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stylish Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .auth {
+            display: flex;
+            gap: 15px;
+        }
+        .auth a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background 0.3s ease;
+        }
+        .auth a:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .grid-item {
+            text-align: center;
+            border-radius: 10px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .grid-item:hover {
+            transform: translateY(-5px);
+        }
+        .grid-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .grid-item p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Game Center</h1>
+        <div class="auth">
+            <a href="#">Sign In</a>
+            <a href="#">Sign Up</a>
+        </div>
+    </div>
+    
+    <div class="grid-container">
+        <div class="grid-item" onclick="window.location.href='https://game1.example.com'">
+            <img src="images/pacman.jpg" alt="Pacman">
+            <p>Pacman</p>
+        </div>
+        <div class="grid-item" onclick="window.location.href='https://game2.example.com'">
+            <img src="images/game2.jpg" alt="Game 2">
+            <p>텍스트 2</p>
+        </div>
+        <div class="grid-item">
+            <img src="https://via.placeholder.com/150" alt="이미지3">
+            <p>텍스트 3</p>
+        </div>
+        <div class="grid-item">
+            <img src="https://via.placeholder.com/150" alt="이미지4">
+            <p>텍스트 4</p>
+        </div>
+        <div class="grid-item">
+            <img src="https://via.placeholder.com/150" alt="이미지5">
+            <p>텍스트 5</p>
+        </div>
+    </div>
+</body>
+</html>
