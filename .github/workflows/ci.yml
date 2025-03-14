@@ -37,6 +37,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: Create ECR repositories if not exist
+      run: |
+        # 프론트엔드 레포지토리 생성 시도
+        aws ecr describe-repositories --repository-names game-website || \
+        aws ecr create-repository --repository-name game-website
+        
+        # 백엔드 레포지토리 생성 시도
+        aws ecr describe-repositories --repository-names game-backend || \
+        aws ecr create-repository --repository-name game-backend
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
