@@ -71,7 +71,19 @@ jobs:
         VERSION: ${{ steps.frontend-version.outputs.version }}
       run: |
         cd mainpage
+        # 빌드 과정 로그 추가
+        echo "Building frontend image with version: ${VERSION}"
+        echo "Current directory contents:"
+        ls -la
+        
+        # 이미지 빌드
         docker build -t $ECR_REGISTRY/game-website:$IMAGE_TAG .
+        
+        # 빌드된 이미지 확인
+        echo "Built image details:"
+        docker inspect $ECR_REGISTRY/game-website:$IMAGE_TAG
+        
+        # 이미지 푸시
         docker push $ECR_REGISTRY/game-website:$IMAGE_TAG
         
         docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:latest
