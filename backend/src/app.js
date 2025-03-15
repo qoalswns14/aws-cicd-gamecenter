@@ -1,6 +1,6 @@
 const express = require('express');
 const Redis = require('ioredis');
-const { Pool } = require('pg');
+const mysql = require('mysql2/promise');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 
@@ -16,51 +16,117 @@ const redis = new Redis({
   port: parseInt(process.env.REDIS_PORT),
 });
 
-// Aurora 연결
-const pool = new Pool({
+// MySQL 연결 풀 생성
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-// 인증 라우트
-app.post('/auth/signup', async (req, res) => {
+// 데이터베이스 연결 테스트
+app.get('/health', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // DB 연결 테스트
+    const [rows] = await pool.query('SELECT NOW() as now');
     
-    const result = await pool.query(
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id',
-      [username, email, hashedPassword]
-    );
-    res.json({ success: true, userId: result.rows[0].id });
+    // Redis 연결 테스트
+    const redisResult = await redis.ping();
+    
+    res.json({
+      status: 'healthy',
+      database: rows[0],
+      redis: redisResult
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      status: 'unhealthy',
+      error: error.message
+    });
   }
 });
 
+// 회원가입
+app.post('/auth/signup', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    
+    // 이메일 중복 체크
+    const [existingUsers] = await pool.query(
+      'SELECT id FROM users WHERE email = ?',
+      [email]
+    );
+    
+    if (existingUsers.length > 0) {
+      return res.status(400).json({ error: '이미 존재하는 이메일입니다.' });
+    }
+    
+    // 비밀번호 해싱
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // 사용자 생성
+    const [result] = await pool.query(
+      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+      [username, email, hashedPassword]
+    );
+    
+    res.json({
+      success: true,
+      userId: result.insertId,
+      message: '회원가입이 완료되었습니다.'
+    });
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({
+      error: '회원가입 중 오류가 발생했습니다.',
+      details: error.message
+    });
+  }
+});
+
+// 로그인
 app.post('/auth/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     
-    if (user.rows.length > 0) {
-      const isValid = await bcrypt.compare(password, user.rows[0].password);
-      
-      if (isValid) {
-        const sessionId = Math.random().toString(36).substring(7);
-        await redis.set(`session:${sessionId}`, user.rows[0].id, 'EX', 86400);
-        res.json({ success: true, sessionId });
-      } else {
-        res.status(401).json({ error: 'Invalid credentials' });
-      }
-    } else {
-      res.status(401).json({ error: 'User not found' });
+    // 사용자 찾기
+    const [users] = await pool.query(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
+    
+    if (users.length === 0) {
+      return res.status(401).json({ error: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
+    
+    const user = users[0];
+    
+    // 비밀번호 확인
+    const isValid = await bcrypt.compare(password, user.password);
+    
+    if (!isValid) {
+      return res.status(401).json({ error: '이메일 또는 비밀번호가 잘못되었습니다.' });
+    }
+    
+    // 세션 생성
+    const sessionId = Math.random().toString(36).substring(7);
+    await redis.set(`session:${sessionId}`, user.id, 'EX', 86400); // 24시간
+    
+    res.json({
+      success: true,
+      sessionId,
+      username: user.username
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Signin error:', error);
+    res.status(500).json({
+      error: '로그인 중 오류가 발생했습니다.',
+      details: error.message
+    });
   }
 });
 

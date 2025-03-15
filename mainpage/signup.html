@@ -135,7 +135,7 @@
             };
 
             try {
-                const response = await fetch('http://game-backend/auth/signup', {
+                const response = await fetch('http://game-backend.game-system/auth/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -145,10 +145,10 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    alert('회원가입이 완료되었습니다. 로그인해주세요.');
+                    alert(data.message);
                     window.location.href = 'signin.html';
                 } else {
-                    alert('회원가입 실패: ' + data.error);
+                    alert(data.error || '회원가입 실패');
                 }
             } catch (error) {
                 console.error('Error:', error);

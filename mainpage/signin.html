@@ -133,7 +133,7 @@
         };
 
         try {
-            const response = await fetch('http://game-backend/auth/signin', {
+            const response = await fetch('http://game-backend.game-system/auth/signin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -144,9 +144,10 @@
             const data = await response.json();
             if (data.success) {
                 localStorage.setItem('sessionId', data.sessionId);
+                localStorage.setItem('username', data.username);
                 window.location.href = 'main.html';
             } else {
-                alert('로그인 실패: ' + data.error);
+                alert(data.error || '로그인 실패');
             }
         } catch (error) {
             console.error('Error:', error);
