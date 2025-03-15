@@ -128,6 +128,7 @@
         document.querySelector('form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            // 폼 데이터 가져오기
             const formData = {
                 username: document.querySelector('input[placeholder="아이디"]').value,
                 email: document.querySelector('input[placeholder="이메일"]').value,
@@ -135,6 +136,7 @@
             };
 
             try {
+                // 백엔드 API 호출
                 const response = await fetch('/api/auth/signup', {
                     method: 'POST',
                     headers: {
@@ -144,10 +146,11 @@
                 });
 
                 const data = await response.json();
-                if (data.success) {
-                    alert(data.message);
-                    window.location.href = 'signin.html';
-                } else {
+                
+                if (response.ok) {  // 성공 시
+                    alert('회원가입이 완료되었습니다!');
+                    window.location.href = 'signin.html';  // 로그인 페이지로 이동
+                } else {  // 실패 시
                     alert(data.error || '회원가입 실패');
                 }
             } catch (error) {

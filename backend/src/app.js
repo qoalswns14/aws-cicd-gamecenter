@@ -57,40 +57,48 @@ app.get('/health', async (req, res) => {
 
 // 회원가입
 app.post('/api/auth/signup', async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    
-    // 이메일 중복 체크
-    const [existingUsers] = await pool.query(
-      'SELECT id FROM users WHERE email = ?',
-      [email]
-    );
-    
-    if (existingUsers.length > 0) {
-      return res.status(400).json({ error: '이미 존재하는 이메일입니다.' });
+    try {
+        console.log('회원가입 요청:', req.body);  // 요청 데이터 로깅
+        const { username, email, password } = req.body;
+        
+        // 필수 필드 검증
+        if (!username || !email || !password) {
+            return res.status(400).json({ error: '모든 필드를 입력해주세요.' });
+        }
+
+        // 이메일 중복 체크
+        const [existingUsers] = await pool.query(
+            'SELECT id FROM users WHERE email = ?',
+            [email]
+        );
+        
+        if (existingUsers.length > 0) {
+            return res.status(400).json({ error: '이미 존재하는 이메일입니다.' });
+        }
+        
+        // 비밀번호 해싱
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        // 사용자 생성
+        const [result] = await pool.query(
+            'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+            [username, email, hashedPassword]
+        );
+        
+        console.log('회원가입 성공:', { userId: result.insertId, username });  // 성공 로깅
+        
+        res.status(201).json({
+            success: true,
+            userId: result.insertId,
+            message: '회원가입이 완료되었습니다.'
+        });
+    } catch (error) {
+        console.error('회원가입 에러:', error);  // 에러 로깅
+        res.status(500).json({
+            error: '회원가입 중 오류가 발생했습니다.',
+            details: error.message
+        });
     }
-    
-    // 비밀번호 해싱
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    // 사용자 생성
-    const [result] = await pool.query(
-      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
-      [username, email, hashedPassword]
-    );
-    
-    res.json({
-      success: true,
-      userId: result.insertId,
-      message: '회원가입이 완료되었습니다.'
-    });
-  } catch (error) {
-    console.error('Signup error:', error);
-    res.status(500).json({
-      error: '회원가입 중 오류가 발생했습니다.',
-      details: error.message
-    });
-  }
 });
 
 // 로그인
