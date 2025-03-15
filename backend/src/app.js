@@ -64,6 +64,25 @@ app.post('/auth/signin', async (req, res) => {
   }
 });
 
+// 세션 확인 엔드포인트
+app.get('/auth/check', async (req, res) => {
+    const sessionId = req.headers['x-session-id'];
+    if (!sessionId) {
+        return res.status(401).json({ error: 'No session' });
+    }
+
+    try {
+        const userId = await redis.get(`session:${sessionId}`);
+        if (userId) {
+            res.json({ valid: true });
+        } else {
+            res.status(401).json({ error: 'Invalid session' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

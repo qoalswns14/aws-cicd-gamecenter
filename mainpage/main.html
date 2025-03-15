@@ -71,9 +71,8 @@
 <body>
     <div class="header">
         <h1>Game Center</h1>
-        <div class="auth">
-            <a href="signin.html">로그인</a>
-            <a href="signup.html">회원가입</a>
+        <div class="auth" id="authButtons">
+            <!-- 이 부분은 JavaScript로 동적 변경 -->
         </div>
     </div>
     
@@ -99,5 +98,35 @@
             <p>텍스트 5</p>
         </div>
     </div>
+
+    <script>
+    // 로그인 상태 확인 및 UI 업데이트 함수
+    function updateAuthUI() {
+        const sessionId = localStorage.getItem('sessionId');
+        const authButtons = document.getElementById('authButtons');
+        
+        if (sessionId) {
+            // 로그인 상태
+            authButtons.innerHTML = `
+                <a href="#" onclick="logout()">로그아웃</a>
+            `;
+        } else {
+            // 비로그인 상태
+            authButtons.innerHTML = `
+                <a href="signin.html">로그인</a>
+                <a href="signup.html">회원가입</a>
+            `;
+        }
+    }
+
+    // 로그아웃 함수
+    function logout() {
+        localStorage.removeItem('sessionId');
+        updateAuthUI();
+    }
+
+    // 페이지 로드 시 UI 업데이트
+    document.addEventListener('DOMContentLoaded', updateAuthUI);
+    </script>
 </body>
 </html>

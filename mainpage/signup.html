@@ -92,10 +92,14 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    window.location.href = '/signin.html';
+                    alert('회원가입이 완료되었습니다. 로그인해주세요.');
+                    window.location.href = 'signin.html';
+                } else {
+                    alert('회원가입 실패: ' + data.error);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('회원가입 중 오류가 발생했습니다.');
             }
         });
     </script>

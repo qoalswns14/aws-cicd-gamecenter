@@ -89,12 +89,14 @@
 
             const data = await response.json();
             if (data.success) {
-                // 세션 저장
                 localStorage.setItem('sessionId', data.sessionId);
-                window.location.href = '/main.html';
+                window.location.href = 'main.html';
+            } else {
+                alert('로그인 실패: ' + data.error);
             }
         } catch (error) {
             console.error('Error:', error);
+            alert('로그인 중 오류가 발생했습니다.');
         }
     });
     </script>
