@@ -96,9 +96,15 @@ app.post('/auth/signup', async (req, res) => {
         
         console.log('회원가입 성공:', { userId: result.insertId, username });  // 성공 로깅
         
+        // 세션 생성 추가
+        const sessionId = Math.random().toString(36).substring(7);
+        await redis.set(`session:${sessionId}`, result.insertId, 'EX', 86400); // 24시간
+        
         res.status(201).json({
             success: true,
             userId: result.insertId,
+            sessionId: sessionId,  // 세션 ID 추가
+            username: username,    // 사용자 이름 추가
             message: '회원가입이 완료되었습니다.'
         });
     } catch (error) {

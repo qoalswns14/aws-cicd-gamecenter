@@ -71,8 +71,11 @@
 <body>
     <div class="header">
         <h1><a href="main.html" style="color: white; text-decoration: none;">Game Center</a></h1>
-        <div class="auth" id="authButtons">
-            <!-- 이 부분은 JavaScript로 동적 변경 -->
+        <div class="nav-right">
+            <span id="userInfo" style="margin-right: 10px; display: none;">
+                <span id="username"></span>님
+            </span>
+            <button id="authButton" onclick="handleAuth()">로그인</button>
         </div>
     </div>
     
@@ -100,33 +103,36 @@
     </div>
 
     <script>
-    // 로그인 상태 확인 및 UI 업데이트 함수
-    function updateAuthUI() {
+    document.addEventListener('DOMContentLoaded', function() {
         const sessionId = localStorage.getItem('sessionId');
-        const authButtons = document.getElementById('authButtons');
+        const username = localStorage.getItem('username');
+        const authButton = document.getElementById('authButton');
+        const userInfo = document.getElementById('userInfo');
         
-        if (sessionId) {
+        if (sessionId && username) {
             // 로그인 상태
-            authButtons.innerHTML = `
-                <a href="#" onclick="logout()">로그아웃</a>
-            `;
+            document.getElementById('username').textContent = username;
+            userInfo.style.display = 'inline';
+            authButton.textContent = '로그아웃';
         } else {
             // 비로그인 상태
-            authButtons.innerHTML = `
-                <a href="signin.html">로그인</a>
-                <a href="signup.html">회원가입</a>
-            `;
+            userInfo.style.display = 'none';
+            authButton.textContent = '로그인';
+        }
+    });
+
+    function handleAuth() {
+        const sessionId = localStorage.getItem('sessionId');
+        if (sessionId) {
+            // 로그아웃
+            localStorage.removeItem('sessionId');
+            localStorage.removeItem('username');
+            location.reload();
+        } else {
+            // 로그인 페이지로 이동
+            window.location.href = 'signin.html';
         }
     }
-
-    // 로그아웃 함수
-    function logout() {
-        localStorage.removeItem('sessionId');
-        updateAuthUI();
-    }
-
-    // 페이지 로드 시 UI 업데이트
-    document.addEventListener('DOMContentLoaded', updateAuthUI);
     </script>
 </body>
 </html>
