@@ -56,16 +56,29 @@
             font-weight: bold;
         }
         .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
             background-color: #007bff;
-            padding: 10px;
-            text-align: center;
-        }
-        .header h1 {
             color: white;
-            margin: 0;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
         .auth {
-            /* Add any necessary styles for the auth section */
+            display: flex;
+            gap: 15px;
+        }
+        .auth a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background 0.3s ease;
+        }
+        .auth a:hover {
+            background-color: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
