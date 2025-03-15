@@ -6,6 +6,7 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "application"
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    kubernetes.io/ingress.class: alb
 spec:
   type: LoadBalancer
   ports:
