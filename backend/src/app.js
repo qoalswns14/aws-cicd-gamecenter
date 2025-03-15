@@ -19,6 +19,15 @@ app.use(cors({
 const redis = new Redis({
   host: process.env.REDIS_HOST,
   port: parseInt(process.env.REDIS_PORT),
+  retryStrategy: function(times) {
+    const delay = Math.min(times * 50, 2000);
+    return delay;
+  }
+});
+
+// Redis 연결 에러 핸들링 추가
+redis.on('error', function(err) {
+  console.error('Redis 연결 에러:', err);
 });
 
 // MySQL 연결 풀 생성
