@@ -55,14 +55,14 @@ jobs:
       id: frontend-version
       run: |
         cd mainpage
-        VERSION=$(grep 'LABEL version=' Dockerfile | cut -d'"' -f2)
+        VERSION=$(cat VERSION)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Extract backend version
       id: backend-version
       run: |
         cd backend
-        VERSION=$(grep 'LABEL version=' Dockerfile | cut -d'"' -f2)
+        VERSION=$(cat VERSION)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Build and push Frontend image

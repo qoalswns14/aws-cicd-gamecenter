@@ -1,7 +1,8 @@
 FROM node:18-alpine
 
-# 버전 정보 추가
-LABEL version="1.0.1"
+# 버전 정보는 VERSION 파일에서 가져옴
+COPY VERSION /app/VERSION
+LABEL version=$(cat /app/VERSION)
 LABEL description="Game Center Backend"
 
 WORKDIR /usr/src/app
