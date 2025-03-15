@@ -65,7 +65,7 @@ app.get('/health', async (req, res) => {
 });
 
 // 회원가입
-app.post('/api/auth/signup', async (req, res) => {
+app.post('/auth/signup', async (req, res) => {
     try {
         console.log('회원가입 요청:', req.body);  // 요청 데이터 로깅
         const { username, email, password } = req.body;
