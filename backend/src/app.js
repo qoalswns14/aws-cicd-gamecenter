@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 
+
+
+
 // 미들웨어 설정
 app.use(express.json());  // 전역으로 설정
 app.use(cors({
