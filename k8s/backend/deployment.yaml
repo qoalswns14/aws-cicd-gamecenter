@@ -15,11 +15,7 @@ spec:
     spec:
       containers:
       - name: game-backend
-<<<<<<< HEAD
-        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/game-backend:v0.0.4
-=======
         image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/game-backend:v0.0.5
->>>>>>> e9b3588 (dev29)
         ports:
         - containerPort: 3000
         env:
