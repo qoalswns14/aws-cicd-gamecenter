@@ -4,9 +4,10 @@ metadata:
   name: game-backend
   namespace: game-system
 spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 3000
   selector:
-    app: game-backend 
+    app: game-backend
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+  type: ClusterIP  # 클러스터 내부 통신용 

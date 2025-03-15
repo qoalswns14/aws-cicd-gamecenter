@@ -8,10 +8,12 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
     kubernetes.io/ingress.class: alb
 spec:
-  type: LoadBalancer
+  selector:
+    app: game-website
   ports:
-  - port: 80
+  - name: http
+    port: 80
     targetPort: 80
-    protocol: TCP
+  type: LoadBalancer
   selector:
     app: game-website 

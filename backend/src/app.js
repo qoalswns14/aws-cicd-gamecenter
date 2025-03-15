@@ -8,7 +8,11 @@ const app = express();
 
 // 미들웨어 설정
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'x-session-id']
+}));
 
 // Redis 연결
 const redis = new Redis({
