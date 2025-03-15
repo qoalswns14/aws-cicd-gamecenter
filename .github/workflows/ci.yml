@@ -107,9 +107,28 @@ jobs:
         docker tag $ECR_REGISTRY/game-backend:$IMAGE_TAG $ECR_REGISTRY/game-backend:v${VERSION}
         docker push $ECR_REGISTRY/game-backend:v${VERSION}
 
-    - name: Print Image URLs
+    - name: Update Kubernetes manifests
       run: |
-        echo "Frontend image pushed to: $ECR_REGISTRY/game-website:latest"
-        echo "Frontend image pushed to: $ECR_REGISTRY/game-website:v${{ steps.frontend-version.outputs.version }}"
-        echo "Backend image pushed to: $ECR_REGISTRY/game-backend:latest"
-        echo "Backend image pushed to: $ECR_REGISTRY/game-backend:v${{ steps.backend-version.outputs.version }}" 
+        # Frontend version update
+        FRONTEND_VERSION=${{ steps.frontend-version.outputs.version }}
+        BACKEND_VERSION=${{ steps.backend-version.outputs.version }}
+        
+        # Update frontend deployment
+        sed -i "s|game-website:.*|game-website:v${FRONTEND_VERSION}|" k8s/mainpage/deployment.yaml
+        
+        # Update backend deployment
+        sed -i "s|game-backend:.*|game-backend:v${BACKEND_VERSION}|" k8s/backend/deployment.yaml
+        
+        # Git configuration
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        
+        # Stage and commit changes
+        git add k8s/mainpage/deployment.yaml k8s/backend/deployment.yaml
+        git commit -m "Update image versions - Frontend: v${FRONTEND_VERSION}, Backend: v${BACKEND_VERSION}" || echo "No changes to commit"
+        git push origin main
+
+    - name: Print Image URLs and Versions
+      run: |
+        echo "Frontend image updated to version: v${{ steps.frontend-version.outputs.version }}"
+        echo "Backend image updated to version: v${{ steps.backend-version.outputs.version }}" 
