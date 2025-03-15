@@ -1,8 +1,8 @@
 FROM nginx:alpine
 
 # 버전 정보는 VERSION 파일에서 가져옴
-COPY VERSION /app/VERSION
-LABEL version=$(cat /app/VERSION)
+COPY VERSION /tmp/version
+LABEL version="$(cat /tmp/version)"
 LABEL description="Game Center Frontend"
 
 # nginx 설정 파일 복사
