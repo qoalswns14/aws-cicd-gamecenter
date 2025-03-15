@@ -7,12 +7,16 @@ const bcrypt = require('bcrypt');
 const app = express();
 
 // 미들웨어 설정
-app.use(express.json());
+app.use(express.json());  // 전역으로 설정
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'x-session-id']
+    methods: ['GET', 'POST', 'OPTIONS'],  // OPTIONS 메소드 추가
+    allowedHeaders: ['Content-Type', 'x-session-id'],
+    credentials: true
 }));
+
+// API 라우트에 적용
+app.use('/api', express.json());
 
 // Redis 연결
 const redis = new Redis({
@@ -55,7 +59,7 @@ app.get('/health', async (req, res) => {
 });
 
 // 회원가입
-app.post('/auth/signup', async (req, res) => {
+app.post('/api/auth/signup', async (req, res) => {
   try {
     const { username, email, password } = req.body;
     
@@ -93,7 +97,7 @@ app.post('/auth/signup', async (req, res) => {
 });
 
 // 로그인
-app.post('/auth/signin', async (req, res) => {
+app.post('/api/auth/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
     
@@ -135,7 +139,7 @@ app.post('/auth/signin', async (req, res) => {
 });
 
 // 세션 확인 엔드포인트
-app.get('/auth/check', async (req, res) => {
+app.get('/api/auth/check', async (req, res) => {
     const sessionId = req.headers['x-session-id'];
     if (!sessionId) {
         return res.status(401).json({ error: 'No session' });

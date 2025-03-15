@@ -135,7 +135,7 @@
             };
 
             try {
-                const response = await fetch('http://game-backend.game-system.svc.cluster.local/auth/signup', {
+                const response = await fetch('/api/auth/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

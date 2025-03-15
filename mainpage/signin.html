@@ -133,7 +133,7 @@
         };
 
         try {
-            const response = await fetch('http://game-backend.game-system.svc.cluster.local/auth/signin', {
+            const response = await fetch('/api/auth/signin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
