@@ -15,26 +15,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 20px 40px;
             background-color: #007bff;
             color: white;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .auth {
+        .nav-right {
             display: flex;
-            gap: 15px;
+            align-items: center;
+            gap: 20px;
         }
-        .auth a {
+        .user-info {
+            font-size: 16px;
+            color: white;
+            display: none;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .auth-button {
             color: white;
             text-decoration: none;
-            font-weight: bold;
-            padding: 8px 12px;
+            padding: 8px 16px;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.2);
-            transition: background 0.3s ease;
+            transition: background-color 0.3s ease;
+            font-weight: 500;
         }
-        .auth a:hover {
-            background-color: rgba(255, 255, 255, 0.5);
+        .auth-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
         }
         .grid-container {
             display: grid;
@@ -72,10 +82,14 @@
     <div class="header">
         <h1><a href="main.html" style="color: white; text-decoration: none;">Game Center</a></h1>
         <div class="nav-right">
-            <span id="userInfo" style="margin-right: 10px; display: none;">
+            <span id="userInfo" class="user-info">
                 <span id="username"></span>님
             </span>
-            <button id="authButton" onclick="handleAuth()">로그인</button>
+            <div class="auth-buttons">
+                <a href="signin.html" id="loginButton" class="auth-button">로그인</a>
+                <a href="signup.html" id="signupButton" class="auth-button">회원가입</a>
+                <a href="#" id="logoutButton" class="auth-button" style="display: none;">로그아웃</a>
+            </div>
         </div>
     </div>
     
@@ -106,33 +120,34 @@
     document.addEventListener('DOMContentLoaded', function() {
         const sessionId = localStorage.getItem('sessionId');
         const username = localStorage.getItem('username');
-        const authButton = document.getElementById('authButton');
         const userInfo = document.getElementById('userInfo');
+        const loginButton = document.getElementById('loginButton');
+        const signupButton = document.getElementById('signupButton');
+        const logoutButton = document.getElementById('logoutButton');
         
         if (sessionId && username) {
             // 로그인 상태
             document.getElementById('username').textContent = username;
             userInfo.style.display = 'inline';
-            authButton.textContent = '로그아웃';
+            loginButton.style.display = 'none';
+            signupButton.style.display = 'none';
+            logoutButton.style.display = 'inline';
         } else {
             // 비로그인 상태
             userInfo.style.display = 'none';
-            authButton.textContent = '로그인';
+            loginButton.style.display = 'inline';
+            signupButton.style.display = 'inline';
+            logoutButton.style.display = 'none';
         }
     });
 
-    function handleAuth() {
-        const sessionId = localStorage.getItem('sessionId');
-        if (sessionId) {
-            // 로그아웃
-            localStorage.removeItem('sessionId');
-            localStorage.removeItem('username');
-            location.reload();
-        } else {
-            // 로그인 페이지로 이동
-            window.location.href = 'signin.html';
-        }
-    }
+    // 로그아웃 처리
+    document.getElementById('logoutButton').addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('sessionId');
+        localStorage.removeItem('username');
+        location.reload();
+    });
     </script>
 </body>
 </html>
