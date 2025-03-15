@@ -111,7 +111,7 @@ app.post('/auth/signup', async (req, res) => {
 });
 
 // 로그인
-app.post('/api/auth/signin', async (req, res) => {
+app.post('/auth/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
     
