@@ -6,9 +6,6 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 
-
-
-
 // 미들웨어 설정
 app.use(express.json());  // 전역으로 설정
 app.use(cors({
@@ -17,9 +14,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'x-session-id'],
     credentials: true
 }));
-
-// API 라우트에 적용
-app.use('/api', express.json());
 
 // Redis 연결
 const redis = new Redis({
