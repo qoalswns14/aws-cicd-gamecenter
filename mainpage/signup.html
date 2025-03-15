@@ -71,5 +71,33 @@
             이미 계정이 있나요? <a href="login.html">로그인</a>
         </div>
     </div>
+    <script>
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                username: document.querySelector('input[placeholder="아이디"]').value,
+                email: document.querySelector('input[placeholder="이메일"]').value,
+                password: document.querySelector('input[placeholder="비밀번호"]').value
+            };
+
+            try {
+                const response = await fetch('http://game-backend/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = '/signin.html';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
 </body>
 </html>

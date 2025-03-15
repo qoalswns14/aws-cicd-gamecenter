@@ -61,7 +61,7 @@
     <div class="container">
         <h2>로그인</h2>
         <form>
-            <input type="text" placeholder="아이디" required>
+            <input type="text" placeholder="이메일" required>
             <input type="password" placeholder="비밀번호" required>
             <button type="submit">로그인</button>
         </form>
@@ -69,5 +69,34 @@
             계정이 없나요? <a href="signup.html">회원가입</a>
         </div>
     </div>
+    <script>
+    document.querySelector('form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = {
+            email: document.querySelector('input[placeholder="이메일"]').value,
+            password: document.querySelector('input[placeholder="비밀번호"]').value
+        };
+
+        try {
+            const response = await fetch('http://game-backend/auth/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                // 세션 저장
+                localStorage.setItem('sessionId', data.sessionId);
+                window.location.href = '/main.html';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+    </script>
 </body>
 </html>

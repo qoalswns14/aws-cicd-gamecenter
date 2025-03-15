@@ -2,6 +2,7 @@ const express = require('express');
 const Redis = require('ioredis');
 const { Pool } = require('pg');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 const app = express();
 
@@ -28,10 +29,11 @@ const pool = new Pool({
 app.post('/auth/signup', async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    // Aurora에 사용자 저장
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
     const result = await pool.query(
       'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id',
-      [username, email, password]
+      [username, email, hashedPassword]
     );
     res.json({ success: true, userId: result.rows[0].id });
   } catch (error) {
@@ -42,15 +44,20 @@ app.post('/auth/signup', async (req, res) => {
 app.post('/auth/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
-    // 사용자 인증
     const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    
     if (user.rows.length > 0) {
-      // Redis에 세션 저장
-      const sessionId = Math.random().toString(36).substring(7);
-      await redis.set(`session:${sessionId}`, user.rows[0].id, 'EX', 86400);
-      res.json({ success: true, sessionId });
+      const isValid = await bcrypt.compare(password, user.rows[0].password);
+      
+      if (isValid) {
+        const sessionId = Math.random().toString(36).substring(7);
+        await redis.set(`session:${sessionId}`, user.rows[0].id, 'EX', 86400);
+        res.json({ success: true, sessionId });
+      } else {
+        res.status(401).json({ error: 'Invalid credentials' });
+      }
     } else {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: 'User not found' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

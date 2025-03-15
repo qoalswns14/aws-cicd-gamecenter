@@ -38,4 +38,19 @@ spec:
           valueFrom:
             secretKeyRef:
               name: db-secret
-              key: password 
+              key: password
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: game-config
+              key: db-port
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: game-config
+              key: db-name
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: game-config
+              key: redis-port 
