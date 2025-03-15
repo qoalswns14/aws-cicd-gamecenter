@@ -128,15 +128,29 @@
         document.querySelector('form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // 폼 데이터 가져오기
-            const formData = {
-                username: document.querySelector('input[placeholder="아이디"]').value,
-                email: document.querySelector('input[placeholder="이메일"]').value,
-                password: document.querySelector('input[placeholder="비밀번호"]').value
-            };
+            // 1. 폼 데이터 수집 및 유효성 검사
+            const username = document.querySelector('input[placeholder="아이디"]').value;
+            const email = document.querySelector('input[placeholder="이메일"]').value;
+            const password = document.querySelector('input[placeholder="비밀번호"]').value;
+            const passwordConfirm = document.querySelector('input[placeholder="비밀번호 확인"]').value;
+
+            // 2. 클라이언트 측 유효성 검사
+            if (!username || !email || !password) {
+                alert('모든 필드를 입력해주세요.');
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            // 3. API 요청 데이터 준비
+            const formData = { username, email, password };
+            console.log('전송할 데이터:', formData);
 
             try {
-                // 백엔드 API 호출
+                // 4. API 호출
                 const response = await fetch('/api/auth/signup', {
                     method: 'POST',
                     headers: {
@@ -145,16 +159,18 @@
                     body: JSON.stringify(formData)
                 });
 
+                // 5. 응답 처리
                 const data = await response.json();
-                
-                if (response.ok) {  // 성공 시
+                console.log('서버 응답:', data);
+
+                if (response.ok) {
                     alert('회원가입이 완료되었습니다!');
-                    window.location.href = 'signin.html';  // 로그인 페이지로 이동
-                } else {  // 실패 시
+                    window.location.href = 'signin.html';
+                } else {
                     alert(data.error || '회원가입 실패');
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('API 호출 에러:', error);
                 alert('회원가입 중 오류가 발생했습니다.');
             }
         });
