@@ -14,14 +14,14 @@ spec:
   rules:
   - http:
       paths:
-      - path: /games/pacman
+      - path: /games/pacman/
         pathType: Prefix
         backend:
           service:
             name: pacman-game
             port:
               number: 80
-      - path: /games/suika
+      - path: /games/suika/
         pathType: Prefix
         backend:
           service:
