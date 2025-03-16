@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: pacman-game
-        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/pacman:1.0
+        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/pacman:latest
         ports:
         - containerPort: 80 
