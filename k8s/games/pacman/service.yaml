@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pacman-game
+  namespace: game-system
+spec:
+  selector:
+    app: pacman-game
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  type: ClusterIP  # 클러스터 내부 통신용 

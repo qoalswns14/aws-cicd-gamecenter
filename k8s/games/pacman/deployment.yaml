@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pacman-game
+  namespace: game-system
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pacman-game
+  template:
+    metadata:
+      labels:
+        app: pacman-game
+    spec:
+      containers:
+      - name: pacman-game
+        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/pacman:v1.0
+        ports:
+        - containerPort: 80 

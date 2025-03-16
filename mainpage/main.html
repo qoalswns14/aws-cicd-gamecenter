@@ -81,6 +81,55 @@
             color: #333;
             margin-top: 10px;
         }
+        .games-section {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .game-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        .game-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .game-card h3 {
+            color: #333;
+            margin: 10px 0;
+        }
+        .game-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .play-button {
+            display: inline-block;
+            padding: 10px 30px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .play-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -104,20 +153,36 @@
             <p>Pacman</p>
         </div>
         <div class="grid-item" onclick="window.location.href='https://game2.example.com'">
-            <img src="images/apple.jpg" alt="Apple">
-            <p>Apple</p>
+            <img src="images/suika.png" alt="Suika">
+            <p>수박게임</p>
         </div>
         <div class="grid-item">
             <img src="https://via.placeholder.com/150" alt="이미지3">
-            <p>asd</p>
+            <p>testx4</p>
         </div>
         <div class="grid-item">
             <img src="https://via.placeholder.com/150" alt="이미지4">
             <p>텍스트 4</p>
         </div>
-        <div class="grid-item">
-            <img src="https://via.placeholder.com/150" alt="이미지5">
-            <p>텍스트 5</p>
+        
+    </div>
+
+    <!-- 게임 섹션 추가 -->
+    <div class="games-section">
+        <h2>게임 목록</h2>
+        <div class="game-grid">
+            <div class="game-card">
+                <img src="images/pacman.png" alt="Pac-Man">
+                <h3>Pac-Man</h3>
+                <p>클래식 팩맨 게임을 즐겨보세요!</p>
+                <a href="/games/pacman" class="play-button">플레이</a>
+            </div>
+            <div class="game-card">
+                <img src="images/suika.png" alt="Suika Game">
+                <h3>수박 게임</h3>
+                <p>과일을 합쳐 수박을 만들어보세요!</p>
+                <a href="/games/suika" class="play-button">플레이</a>
+            </div>
         </div>
     </div>
 

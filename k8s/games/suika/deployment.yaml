@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: game-website
+  name: suika-game
   namespace: game-system
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: game-website
+      app: suika-game
   template:
     metadata:
       labels:
-        app: game-website
+        app: suika-game
     spec:
       containers:
-      - name: game-website
-        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/game-website:v0.0.19
+      - name: suika-game
+        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/suika-game:latest
         ports:
         - containerPort: 80
         resources:

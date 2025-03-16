@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: suika-game
+  namespace: game-system
+spec:
+  selector:
+    app: suika-game
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  type: ClusterIP  # 클러스터 내부 통신용 
