@@ -69,21 +69,22 @@ jobs:
       env:
         IMAGE_TAG: ${{ github.sha }}
         VERSION: ${{ steps.frontend-version.outputs.version }}
+        S3_BUCKET: ${{ secrets.S3_NAME }}
       run: |
         cd mainpage
-        # 빌드 과정 로그 추가
-        echo "Building frontend image with version: ${VERSION}"
-        echo "Current directory contents:"
-        ls -la
         
-        # 이미지 빌드
+        # Docker 이미지 빌드
         docker build -t $ECR_REGISTRY/game-website:$IMAGE_TAG .
         
-        # 빌드된 이미지 확인
-        echo "Built image details:"
-        docker inspect $ECR_REGISTRY/game-website:$IMAGE_TAG
+        # S3에 정적 파일 업로드
+        # 캐싱 작업하기전에는 주석처리
+        aws s3 sync . s3://${S3_BUCKET}/v${VERSION}/ \
+          --exclude "Dockerfile" \
+          --exclude "nginx.conf" \
+          --exclude "VERSION" \
+          --cache-control "public, max-age=31536000"
         
-        # 이미지 푸시
+        # Docker 이미지 푸시
         docker push $ECR_REGISTRY/game-website:$IMAGE_TAG
         
         docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:latest
