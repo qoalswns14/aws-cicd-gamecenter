@@ -77,12 +77,7 @@ jobs:
         docker build -t $ECR_REGISTRY/game-website:$IMAGE_TAG .
         
         # S3에 정적 파일 업로드
-        # 캐싱 작업하기전에는 주석처리
-        aws s3 sync . s3://${S3_BUCKET}/v${VERSION}/ \
-          --exclude "Dockerfile" \
-          --exclude "nginx.conf" \
-          --exclude "VERSION" \
-          --cache-control "public, max-age=31536000"
+       
         
         # Docker 이미지 푸시
         docker push $ECR_REGISTRY/game-website:$IMAGE_TAG
