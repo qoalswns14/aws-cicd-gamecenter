@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: suika-game
-        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/suika-game:1.3
+        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/suika-game:1.4
         ports:
         - containerPort: 80
         resources:
