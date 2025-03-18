@@ -72,18 +72,18 @@ jobs:
         S3_BUCKET: ${{ secrets.S3_NAME }}
       run: |
         cd mainpage
-        
-        # Docker 이미지 빌드
         docker build -t $ECR_REGISTRY/game-website:$IMAGE_TAG .
-      
-       
-        
-        # Docker 이미지 푸시
+
+        # s3에 정적 파일 업로드
+        aws s3 sync . s3://${S3_BUCKET}/ \
+          --exclude "Dockerfile" \
+          --exclude "nginx.conf" \
+          --exclude "VERSION" \
+          --cache-control "public, max-age=31536000"
+
         docker push $ECR_REGISTRY/game-website:$IMAGE_TAG
-        
         docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:latest
         docker push $ECR_REGISTRY/game-website:latest
-        
         docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:v${VERSION}
         docker push $ECR_REGISTRY/game-website:v${VERSION}
 
