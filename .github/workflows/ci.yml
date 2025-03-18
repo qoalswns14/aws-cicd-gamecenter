@@ -130,6 +130,7 @@ jobs:
 
     - name: Set S3 Object ACL to Public
       run: |
+        cd mainpage  # mainpage 디렉토리로 이동
         aws s3 sync ./images s3://${S3_BUCKET}/images/ --acl public-read
         aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "main.html" --acl public-read
         aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "signin.html" --acl public-read
