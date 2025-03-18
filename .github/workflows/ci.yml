@@ -126,4 +126,11 @@ jobs:
     - name: Print Image URLs and Versions
       run: |
         echo "Frontend image updated to version: v${{ steps.frontend-version.outputs.version }}"
-        echo "Backend image updated to version: v${{ steps.backend-version.outputs.version }}" 
+        echo "Backend image updated to version: v${{ steps.backend-version.outputs.version }}"
+
+    - name: Set S3 Object ACL to Public
+      run: |
+        aws s3 sync ./images s3://${S3_BUCKET}/images/ --acl public-read
+        aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "main.html" --acl public-read
+        aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "signin.html" --acl public-read
+        aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "signup.html" --acl public-read
