@@ -18,11 +18,6 @@ spec:
         image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/suika-game:1.0
         ports:
         - containerPort: 80
-        env:
-        - name: NGINX_CORS
-          value: "true"
-        - name: NGINX_LOCATION
-          value: "/public/"
         resources:
           requests:
             memory: "64Mi"

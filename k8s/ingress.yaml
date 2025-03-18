@@ -50,10 +50,3 @@ spec:
             name: game-website
             port:
               number: 80
-      - path: /public/
-        pathType: Prefix
-        backend:
-          service:
-            name: suika-game
-            port:
-              number: 80 
