@@ -118,6 +118,9 @@ jobs:
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
         
+        # Pull latest changes
+        git pull origin main
+        
         # Stage and commit changes
         git add k8s/mainpage/deployment.yaml k8s/backend/deployment.yaml
         git commit -m "Update image versions - Frontend: v${FRONTEND_VERSION}, Backend: v${BACKEND_VERSION}" || echo "No changes to commit"
@@ -129,12 +132,14 @@ jobs:
         echo "Backend image updated to version: v${{ steps.backend-version.outputs.version }}"
 
     - name: Set S3 Object ACL to Public
+      env:
+        S3_BUCKET: ${{ secrets.S3_NAME }}
       run: |
-        cd mainpage  # mainpage 디렉토리로 이동
+        cd mainpage
         aws s3 sync ./images s3://${S3_BUCKET}/images/ --acl public-read
-        aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "main.html" --acl public-read
-        aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "signin.html" --acl public-read
-        aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "signup.html" --acl public-read
+        aws s3api put-object-acl --bucket ${S3_BUCKET} --key "main.html" --acl public-read
+        aws s3api put-object-acl --bucket ${S3_BUCKET} --key "signin.html" --acl public-read
+        aws s3api put-object-acl --bucket ${S3_BUCKET} --key "signup.html" --acl public-read
 
     # 캐시 무효화
     # cloudfront의 id를 교체해야함
