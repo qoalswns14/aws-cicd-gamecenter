@@ -134,3 +134,11 @@ jobs:
         aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "main.html" --acl public-read
         aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "signin.html" --acl public-read
         aws s3api put-object-acl --bucket ${{ secrets.S3_NAME }} --key "signup.html" --acl public-read
+
+    # 캐시 무효화
+    # cloudfront의 id를 교체해야함
+    - name: Invalidate CloudFront Cache
+      run: |
+        aws cloudfront create-invalidation \
+          --distribution-id EQ47YREQWF3MJ \
+          --paths "/*"
