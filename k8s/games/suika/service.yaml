@@ -3,11 +3,14 @@ kind: Service
 metadata:
   name: suika-game
   namespace: game-system
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
 spec:
-  selector:
-    app: suika-game
+  type: LoadBalancer
   ports:
   - name: http
     port: 80
     targetPort: 80
-  type: ClusterIP  # 클러스터 내부 통신용 
+  selector:
+    app: suika-game 
