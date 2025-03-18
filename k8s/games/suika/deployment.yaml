@@ -21,6 +21,8 @@ spec:
         env:
         - name: NGINX_CORS
           value: "true"
+        - name: NGINX_LOCATION
+          value: "/public/"
         resources:
           requests:
             memory: "64Mi"
