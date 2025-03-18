@@ -9,7 +9,8 @@ metadata:
     alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.drop_invalid_header_fields.enabled=true
     alb.ingress.kubernetes.io/cors-allow-methods: GET, POST, OPTIONS
     alb.ingress.kubernetes.io/cors-allow-origin: '*'
-    alb.ingress.kubernetes.io/cors-allow-headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Session-Id'
+    alb.ingress.kubernetes.io/cors-allow-headers: '*'
+    alb.ingress.kubernetes.io/cors-expose-headers: '*'
 spec:
   rules:
   - http:
