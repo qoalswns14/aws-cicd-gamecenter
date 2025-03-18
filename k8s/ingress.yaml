@@ -50,7 +50,7 @@ spec:
             name: game-website
             port:
               number: 80
-      - path: /public/halloween/
+      - path: /public/
         pathType: Prefix
         backend:
           service:
