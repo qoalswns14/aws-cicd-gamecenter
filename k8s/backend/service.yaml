@@ -8,6 +8,6 @@ spec:
     app: game-backend
   ports:
   - name: http
-    port: 80
-    targetPort: 3000
+    port: 80        # 이 부분이 ingress에서 사용하는 포트
+    targetPort: 3000  # 컨테이너의 실제 포트
   type: ClusterIP  # 클러스터 내부 통신용 
