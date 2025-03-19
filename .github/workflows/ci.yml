@@ -136,7 +136,9 @@ jobs:
         S3_BUCKET: ${{ secrets.S3_NAME }}
       run: |
         cd mainpage
+        # 이미지 폴더 전체를 public-read로 설정
         aws s3 sync ./images s3://${S3_BUCKET}/images/ --acl public-read
+        # HTML 파일들을 public-read로 설정
         aws s3api put-object-acl --bucket ${S3_BUCKET} --key "main.html" --acl public-read
         aws s3api put-object-acl --bucket ${S3_BUCKET} --key "signin.html" --acl public-read
         aws s3api put-object-acl --bucket ${S3_BUCKET} --key "signup.html" --acl public-read
