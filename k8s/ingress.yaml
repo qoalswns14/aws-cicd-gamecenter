@@ -29,13 +29,6 @@ spec:
             name: suika-game
             port:
               number: 80
-      - path: /games/sputnika/
-        pathType: Prefix
-        backend:
-          service:
-            name: sputnika-game
-            port:
-              number: 80
       - path: /games/minipunk/
         pathType: Prefix
         backend:
