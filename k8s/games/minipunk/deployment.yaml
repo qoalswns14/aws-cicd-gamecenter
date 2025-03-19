@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minipunk-game
+  namespace: game-system
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: minipunk-game
+  template:
+    metadata:
+      labels:
+        app: minipunk-game
+    spec:
+      containers:
+      - name: minipunk-game
+        image: 248189943688.dkr.ecr.us-east-2.amazonaws.com/minipunk:1.0
+        ports:
+        - containerPort: 5000 
