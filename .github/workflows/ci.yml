@@ -74,17 +74,12 @@ jobs:
         cd mainpage
         docker build -t $ECR_REGISTRY/game-website:$IMAGE_TAG .
 
-        # s3에 정적 파일 업로드
-        #aws s3 sync . s3://${S3_BUCKET}/ \
-        #  --exclude "Dockerfile" \
-        #  --exclude "nginx.conf" \
-        #  --exclude "VERSION" \
-        #  --cache-control "public, max-age=31536000"
+       
 
         docker push $ECR_REGISTRY/game-website:$IMAGE_TAG
         docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:latest
         docker push $ECR_REGISTRY/game-website:latest
-        docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:v${VERSION}
+        docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:${VERSION}
         docker push $ECR_REGISTRY/game-website:v${VERSION}
 
     - name: Build and push Backend image
@@ -125,6 +120,9 @@ jobs:
         git add k8s/mainpage/deployment.yaml k8s/backend/deployment.yaml
         git commit -m "Update image versions - Frontend: v${FRONTEND_VERSION}, Backend: v${BACKEND_VERSION}" || echo "No changes to commit"
         git push origin main
+
+    - name: apply ingress.yaml
+      run: kubectl apply -f k8s/ingress.yaml
 
     - name: Print Image URLs and Versions
       run: |
