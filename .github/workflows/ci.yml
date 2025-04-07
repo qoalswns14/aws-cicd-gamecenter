@@ -75,11 +75,11 @@ jobs:
         docker build -t $ECR_REGISTRY/game-website:$IMAGE_TAG .
 
         # s3에 정적 파일 업로드
-        aws s3 sync . s3://${S3_BUCKET}/ \
-          --exclude "Dockerfile" \
-          --exclude "nginx.conf" \
-          --exclude "VERSION" \
-          --cache-control "public, max-age=31536000"
+        #aws s3 sync . s3://${S3_BUCKET}/ \
+        #  --exclude "Dockerfile" \
+        #  --exclude "nginx.conf" \
+        #  --exclude "VERSION" \
+        #  --cache-control "public, max-age=31536000"
 
         docker push $ECR_REGISTRY/game-website:$IMAGE_TAG
         docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:latest
@@ -131,22 +131,22 @@ jobs:
         echo "Frontend image updated to version: v${{ steps.frontend-version.outputs.version }}"
         echo "Backend image updated to version: v${{ steps.backend-version.outputs.version }}"
 
-    - name: Set S3 Object ACL to Public
-      env:
-        S3_BUCKET: ${{ secrets.S3_NAME }}
-      run: |
-        cd mainpage
+    #- name: Set S3 Object ACL to Public
+    #  env:
+    #    S3_BUCKET: ${{ secrets.S3_NAME }}
+    #  run: |
+    #    cd mainpage
         # 이미지 폴더 전체를 public-read로 설정
-        aws s3 sync ./images s3://${S3_BUCKET}/images/ --acl public-read
+    #    aws s3 sync ./images s3://${S3_BUCKET}/images/ --acl public-read
         # HTML 파일들을 public-read로 설정
-        aws s3api put-object-acl --bucket ${S3_BUCKET} --key "main.html" --acl public-read
-        aws s3api put-object-acl --bucket ${S3_BUCKET} --key "signin.html" --acl public-read
-        aws s3api put-object-acl --bucket ${S3_BUCKET} --key "signup.html" --acl public-read
+    #    aws s3api put-object-acl --bucket ${S3_BUCKET} --key "main.html" --acl public-read
+    #    aws s3api put-object-acl --bucket ${S3_BUCKET} --key "signin.html" --acl public-read
+    #    aws s3api put-object-acl --bucket ${S3_BUCKET} --key "signup.html" --acl public-read
 
     # 캐시 무효화
     # cloudfront의 id를 교체해야함
-    - name: Invalidate CloudFront Cache
-      run: |
-        aws cloudfront create-invalidation \
-          --distribution-id EQ47YREQWF3MJ \
-          --paths "/*"
+    #- name: Invalidate CloudFront Cache
+    #  run: |
+    #    aws cloudfront create-invalidation \
+    #      --distribution-id EQ47YREQWF3MJ \
+    #      --paths "/*"
