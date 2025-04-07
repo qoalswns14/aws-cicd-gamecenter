@@ -79,7 +79,7 @@ jobs:
         docker push $ECR_REGISTRY/game-website:$IMAGE_TAG
         docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:latest
         docker push $ECR_REGISTRY/game-website:latest
-        docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:${VERSION}
+        docker tag $ECR_REGISTRY/game-website:$IMAGE_TAG $ECR_REGISTRY/game-website:v${VERSION}
         docker push $ECR_REGISTRY/game-website:v${VERSION}
 
     - name: Build and push Backend image
