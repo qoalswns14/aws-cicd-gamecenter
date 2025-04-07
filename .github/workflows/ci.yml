@@ -121,8 +121,13 @@ jobs:
         git commit -m "Update image versions - Frontend: v${FRONTEND_VERSION}, Backend: v${BACKEND_VERSION}" || echo "No changes to commit"
         git push origin main
 
+    - name: update kubectl config
+      run : |
+        aws eks update-kubeconfig --name my-eks --region us-east-2
+
     - name: apply ingress.yaml
-      run: kubectl apply -f k8s/ingress.yaml
+      run: |
+        kubectl apply -f k8s/ingress.yaml
 
     - name: Print Image URLs and Versions
       run: |
