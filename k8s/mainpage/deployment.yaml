@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: game-website
-        image: 864899841010.dkr.ecr.us-east-2.amazonaws.com/game-website:v0.1.3
+        image: 864899841010.dkr.ecr.us-east-2.amazonaws.com/game-website:v0.1.4
         ports:
         - containerPort: 80
         resources:
